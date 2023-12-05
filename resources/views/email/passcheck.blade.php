@@ -45,7 +45,7 @@
                                     <br><br>
                                     Mohon Masukan Password Anda
                                     </p>
-                                    <form id="frmEditor" class="form-horizontal" method="POST" action="{{url('/api/porequest/updatestatus')}}" enctype="multipart/form-data">
+                                    <form id="frmEditor" class="form-horizontal" method="POST" action="{{url('/api/<?php echo $link?>/updatestatus')}}" enctype="multipart/form-data">
                                     @csrf
                                     <input type="text" id="status" name="status" value="<?php echo $status?>" hidden>
                                     <input type="text" id="doc_no" name="doc_no" value="<?php echo $doc_no?>" hidden>

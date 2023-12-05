@@ -63,7 +63,7 @@ class PoRequestController extends Controller
         }
     }
 
-    public function reqpass($status ='', $doc_no = '', $encrypt='') {
+    public function reqpass($link='', $status ='', $doc_no = '', $encrypt='') {
         if ($status == 'A') {
             $name   = 'Approval';
             $bgcolor = '#40de1d';
@@ -82,6 +82,7 @@ class PoRequestController extends Controller
             "status"    => $status,
             "doc_no"    => $doc_no,
             "email"     => $dataArray["email_address"],
+            "link"      => $link,
             "encrypt"   => $encrypt,
             "name"      => $name,
             "bgcolor"   => $bgcolor,
