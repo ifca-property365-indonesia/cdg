@@ -15,13 +15,19 @@ class PoRequestController extends Controller
     {
         $new_doc_no = str_replace("/","-",$request->doc_no);
 
+        if (isset($request->req_hd_descs)) {
+            $req_hd_descs = str_replace('\n', '(', $request->req_hd_descs) . ')';
+        } else {
+            $req_hd_descs = $request->req_hd_descs;
+        }
+
         $dataArray = array(
             'sender'        => $request->sender,
             'entity_name'   => $request->entity_name,
             'email_address' => $request->email_addr,
             'descs'         => $request->descs,
             'doc_no'        => $new_doc_no,
-            'req_hd_descs'  => $request->req_hd_descs,
+            'req_hd_descs'  => $req_hd_descs,
             'req_hd_no'     => $request->req_hd_no,
             'user_name'     => $request->user_name,
             'url_file'      => $request->url_file,
@@ -45,17 +51,26 @@ class PoRequestController extends Controller
         $encryptedData = Crypt::encrypt($data2Encrypt);
     
         try {
-            $emails = is_array($request->email_addr) ? $request->email_addr : [$request->email_addr];
+            $emailAddresses = $request->email_addr;
         
-            foreach ($emails as $email) {
-                // Mengirim email dengan data yang telah dienkripsi
-                Mail::to($email)->send(new PoRequestMail($encryptedData, $dataArray));
+            // Check if email addresses are provided and not empty
+            if (!empty($emailAddresses)) {
+                $emails = is_array($emailAddresses) ? $emailAddresses : [$emailAddresses];
+                
+                foreach ($emails as $email) {
+                    // Mengirim email dengan data yang telah dienkripsi
+                    Mail::to($email)->send(new PoRequestMail($encryptedData, $dataArray));
+                }
+                
+                // Jika berhasil mengirim semua email
+                $sentTo = is_array($emailAddresses) ? implode(', ', $emailAddresses) : $emailAddresses;
+                Log::info('Email berhasil dikirim ke: ' . $sentTo);
+                return "Email berhasil dikirim";
+            } else {
+                // Handle the case where email addresses are empty
+                Log::warning('Tidak ada alamat email yang diberikan.');
+                return "Tidak ada alamat email yang diberikan.";
             }
-            
-            // Jika berhasil mengirim semua email
-            $sentTo = is_array($request->email_addr) ? implode(', ', $request->email_addr) : $request->email_addr;
-            Log::info('Email berhasil dikirim ke: ' . $sentTo);
-            return "Email berhasil dikirim";
         } catch (\Exception $e) {
             // Tangani kesalahan jika pengiriman email gagal
             Log::error('Gagal mengirim email: ' . $e->getMessage());
