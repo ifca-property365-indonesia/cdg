@@ -36,7 +36,7 @@
                         <tbody>
                             <tr>
                                 <td style="text-align:center;padding: 50px 30px;">
-                                    <img style="width:88px; margin-bottom:24px;" src="http://dev.ifca.co.id:8080/btid_email/public/images/<?php echo $image ?>" alt="Verified">
+                                    <img style="width:88px; margin-bottom:24px;" src="{{ url('public/images/' . $image) }}" alt="Verified">
                                     <p><?php echo $Pesan ?></p>
                                 </td>
                             </tr>
