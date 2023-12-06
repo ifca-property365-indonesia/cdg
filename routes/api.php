@@ -18,15 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+use App\Http\Controllers\MailDataController as MailData;
 
-
-use App\Http\Controllers\PoRequestController as porequest;
-
-Route::POST('/porequest', [porequest::class, 'sendMail']);
-Route::GET('/porequest/{status}/{doc_no}/{encrypt}', [porequest::class, 'reqpass']);
-Route::POST('/porequest/updatestatus', [porequest::class, 'updateStatus']);
-
-use App\Http\Controllers\StaffActionController as StaffAction;
-
-Route::POST('/staffaction', [StaffAction::class, 'staffaction']);
-Route::POST('/fileexist', [StaffAction::class, 'fileexist']);
+Route::POST('/maildata', [MailData::class, 'receive']);
