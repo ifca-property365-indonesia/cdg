@@ -11,24 +11,16 @@ class PoOrderController extends Controller
 
         $new_doc_no = str_replace("/","-",$data["doc_no"]);
 
-        if (isset($data["req_hd_descs"])) {
-            $req_hd_descs = str_replace('\n', '(', $data["req_hd_descs"]) . ')';
-        } else {
-            $req_hd_descs = $data["req_hd_descs"];
-        }
-
         $dataArray = array(
-            'sender'        => $data["sender"],
-            'entity_name'   => $data["entity_name"],
-            'descs'         => $data["descs"],
             'doc_no'        => $new_doc_no,
-            'req_hd_descs'  => $req_hd_descs,
-            'req_hd_no'     => $data["req_hd_no"],
-            'user_name'     => $data["user_name"],
+            'sender'        => $data["sender"],
             'url_file'      => $data["url_file"],
             'file_name'     => $data["file_name"],
-            'module'        => "PoRequest",
-            'subject'       => "Need Approval for Purchase Requisition No. ".$data['req_hd_no'],
+            'entity_name'   => $data["entity_name"],
+            'email_address' => $data["email_addr"],
+            'user_name'     => $data["user_name"],
+            'module'        => "PoOrder",
+            'subject'       => "Need Approval for Purchase Order No ".$data['doc_no'],
         );
 
         $data2Encrypt = array(
@@ -36,6 +28,7 @@ class PoOrderController extends Controller
             'project_no'    => $data["project_no"],
             'email_address' => $data["email_addr"],
             'level_no'      => $data["level_no"],
+            'trx_type'      => $data["trx_type"],
             'doc_no'        => $new_doc_no,
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
@@ -67,5 +60,10 @@ class PoOrderController extends Controller
             Log::channel('sendmail')->error('Gagal mengirim email: ' . $e->getMessage());
             return "Gagal mengirim email: " . $e->getMessage();
         }
+    }
+
+    public function update($status, $encrypt, $reason)
+    {
+        return "READY TO UPDATE";
     }
 }
