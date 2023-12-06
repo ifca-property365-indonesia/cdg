@@ -8,8 +8,9 @@ class MailDataController extends Controller
 {
     public function receive(Request $request)
     {
+        $dataFromExternal = $request->all();
         if ($request->type == "Q" && $request->module == "PO") {
-            return redirect()->action([SecondController::class, 'methodName']);
+            return ControllerB::processData($dataFromExternal);
         } else if ($request->type == "A" && $request->module == "PO"){
             return "PO ORDER";
         } else {
