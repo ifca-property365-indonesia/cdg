@@ -11,7 +11,8 @@ use App\Mail\SendMail;
 
 class PoRequestController extends Controller
 {
-    public function processModule($data) {
+    public function processModule($data) 
+    {
 
         $new_doc_no = str_replace("/","-",$data["doc_no"]);
 
