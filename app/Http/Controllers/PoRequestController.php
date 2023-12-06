@@ -58,21 +58,17 @@ class PoRequestController extends Controller
                 $emails = is_array($emailAddresses) ? $emailAddresses : [$emailAddresses];
                 
                 foreach ($emails as $email) {
-                    // Mengirim email dengan data yang telah dienkripsi
                     Mail::to($email)->send(new PoRequestMail($encryptedData, $dataArray));
                 }
                 
-                // Jika berhasil mengirim semua email
                 $sentTo = is_array($emailAddresses) ? implode(', ', $emailAddresses) : $emailAddresses;
                 Log::info('Email berhasil dikirim ke: ' . $sentTo);
                 return "Email berhasil dikirim";
             } else {
-                // Handle the case where email addresses are empty
                 Log::warning('Tidak ada alamat email yang diberikan.');
                 return "Tidak ada alamat email yang diberikan.";
             }
         } catch (\Exception $e) {
-            // Tangani kesalahan jika pengiriman email gagal
             Log::error('Gagal mengirim email: ' . $e->getMessage());
             return "Gagal mengirim email. Cek log untuk detailnya.";
         }
