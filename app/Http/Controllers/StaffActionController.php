@@ -59,14 +59,14 @@ class StaffActionController extends Controller
                 }
                 
                 $sentTo = is_array($emailAddresses) ? implode(', ', $emailAddresses) : $emailAddresses;
-                Log::info('Email berhasil dikirim ke: ' . $sentTo);
+                Log::channel('sendmail')->info('Email berhasil dikirim ke: ' . $sentTo);
                 return "Email berhasil dikirim";
             } else {
-                Log::warning('Tidak ada alamat email yang diberikan.');
+                Log::channel('sendmail')->warning('Tidak ada alamat email yang diberikan.');
                 return "Tidak ada alamat email yang diberikan.";
             }
         } catch (\Exception $e) {
-            Log::error('Gagal mengirim email: ' . $e->getMessage());
+            Log::channel('sendmail')->error('Gagal mengirim email: ' . $e->getMessage());
             return "Gagal mengirim email. Cek log untuk detailnya.";
         }
     }

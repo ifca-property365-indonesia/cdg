@@ -1,0 +1,6 @@
+[2023-12-06 10:11:41] local.INFO: Email berhasil dikirim ke: ahmad.ariffandy@ifca.co.id  
+[2023-12-06 10:12:07] local.ERROR: Gagal mengirim email: Expected response code 250 but got code "450", with message "450 Message not queued: recipient is suppressed
+"  
+[2023-12-06 10:12:35] local.INFO: Email berhasil dikirim ke: ahmad.ariffandy@ifca.co.id  
+[2023-12-06 10:12:59] local.WARNING: Tidak ada alamat email yang diberikan.  
+[2023-12-06 10:13:11] local.INFO: Email berhasil dikirim ke: ahmad.ariffandy@ifca.co.id  
