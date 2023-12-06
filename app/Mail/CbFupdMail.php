@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PoRequestMail extends Mailable
+class CbFupdMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -36,9 +36,8 @@ class PoRequestMail extends Mailable
      */
     public function build()
     {
-
-        return $this->subject('Need Approval for Purchase Requisition No. '.$this->dataArray['req_hd_no'])
-                    ->view('email.porequest.send')
+        return $this->subject('Need Approval for Propose Transfer to Bank No. '.$this->mailData['doc_no'])
+                    ->view('email.cbfupd.send')
                     ->with([
                         'encryptedData' => $this->encryptedData,
                         'dataArray' => $this->dataArray,

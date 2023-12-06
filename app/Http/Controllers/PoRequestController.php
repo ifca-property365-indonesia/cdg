@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
-use App\Mail\PoRequestMail;
 use Illuminate\Support\Facades\DB;
+use App\Mail\PoRequestMail;
 
 class PoRequestController extends Controller
 {
