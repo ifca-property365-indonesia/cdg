@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PoRequestMail extends Mailable
+class SendMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -37,8 +37,8 @@ class PoRequestMail extends Mailable
     public function build()
     {
 
-        return $this->subject('Need Approval for Purchase Requisition No. '.$this->dataArray['req_hd_no'])
-                    ->view('email.porequest.send')
+        return $this->subject($this->dataArray['subject'])
+                    ->view('email.'.$this->dataArray['module'].'.send')
                     ->with([
                         'encryptedData' => $this->encryptedData,
                         'dataArray' => $this->dataArray,

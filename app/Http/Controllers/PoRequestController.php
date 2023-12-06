@@ -3,10 +3,178 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use App\Mail\SendMail;
 
 class PoRequestController extends Controller
 {
-    public function SendMail($data) {
-        return response()->json(['message' => 'Data received successfully', 'data' => $data]);
+    public function processModule($data) {
+
+        $new_doc_no = str_replace("/","-",$data["doc_no"]);
+
+        if (isset($data["req_hd_descs"])) {
+            $req_hd_descs = str_replace('\n', '(', $data["req_hd_descs"]) . ')';
+        } else {
+            $req_hd_descs = $data["req_hd_descs"];
+        }
+
+        $dataArray = array(
+            'sender'        => $data["sender"],
+            'entity_name'   => $data["entity_name"],
+            'descs'         => $data["descs"],
+            'doc_no'        => $new_doc_no,
+            'req_hd_descs'  => $req_hd_descs,
+            'req_hd_no'     => $data["req_hd_no"],
+            'user_name'     => $data["user_name"],
+            'url_file'      => $data["url_file"],
+            'file_name'     => $data["file_name"],
+            'module'        => "PoRequest",
+            'subject'       => "Need Approval for Purchase Requisition No. ".$data['req_hd_no'],
+        );
+
+        $data2Encrypt = array(
+            'entity_cd'     => $data["entity_cd"],
+            'project_no'    => $data["project_no"],
+            'email_address' => $data["email_addr"],
+            'level_no'      => $data["level_no"],
+            'doc_no'        => $new_doc_no,
+            'usergroup'     => $data["usergroup"],
+            'user_id'       => $data["user_id"],
+            'supervisor'    => $data["supervisor"]
+        );
+
+        // Melakukan enkripsi pada $dataArray
+        $encryptedData = Crypt::encrypt($data2Encrypt);
+    
+        try {
+            $emailAddresses = $data["email_addr"];
+        
+            // Check if email addresses are provided and not empty
+            if (!empty($emailAddresses)) {
+                $emails = is_array($emailAddresses) ? $emailAddresses : [$emailAddresses];
+                
+                foreach ($emails as $email) {
+                    Mail::to($email)->send(new SendMail($encryptedData, $dataArray));
+                }
+                
+                $sentTo = is_array($emailAddresses) ? implode(', ', $emailAddresses) : $emailAddresses;
+                Log::channel('sendmail')->info('Email berhasil dikirim ke: ' . $sentTo);
+                return "Email berhasil dikirim ke: " . $sentTo;
+            } else {
+                Log::channel('sendmail')->warning('Tidak ada alamat email yang diberikan.');
+                return "Tidak ada alamat email yang diberikan.";
+            }
+        } catch (\Exception $e) {
+            Log::channel('sendmail')->error('Gagal mengirim email: ' . $e->getMessage());
+            return "Gagal mengirim email: " . $e->getMessage();
+        }
+    }
+
+    public function update($status, $encrypt, $reason)
+    {
+        $data = Crypt::decrypt($encrypt);
+        $entity_cd = $data["entity_cd"];
+        $project_no = $data["project_no"];
+        $level_no = $data["level_no"];
+        $usergroup = $data["usergroup"];
+        $user_id = $data["user_id"];
+        $supervisor = $data["supervisor"];
+
+        $new_doc_no = str_replace("-","/",$data["doc_no"]);
+        $where = array(
+            'doc_no'        => $new_doc_no,
+            'status'        => array("A",'R', 'C'),
+            'entity_cd'     => $entity_cd,
+            'level_no'      => $level_no,
+            'type'          => 'Q',
+            'module'        => 'PO',
+        );
+
+        $query = DB::connection('BTID')
+        ->table('mgr.cb_cash_request_appr')
+        ->where($where)
+        ->get();
+
+        $where2 = array(
+            'doc_no'        => $new_doc_no,
+            'status'        => 'P',
+            'entity_cd'     => $entity_cd,
+            'level_no'      => $level_no,
+            'type'          => 'Q',
+            'module'        => 'PO',
+        );
+
+        $query2 = DB::connection('BTID')
+        ->table('mgr.cb_cash_request_appr')
+        ->where($where2)
+        ->get();
+
+        if (count($query)>0) {
+            $msg = 'You Have Already Made a Request to Purchase Requisition No. '.$new_doc_no ;
+            $notif = 'Restricted !';
+            $st  = 'OK';
+            $image = "double_approve.png";
+            $msg1 = array(
+                "Pesan" => $msg,
+                "St" => $st,
+                "notif" => $notif,
+                "image" => $image
+            );
+        } else if (count($query2) == 0){
+            $msg = 'There is no Purchase Requisition with No. '.$new_doc_no ;
+            $notif = 'Restricted !';
+            $st  = 'OK';
+            $image = "double_approve.png";
+            $msg1 = array(
+                "Pesan" => $msg,
+                "St" => $st,
+                "notif" => $notif,
+                "image" => $image
+            );
+        }
+
+        if ($status == "A") {
+            $descstatus = "Approved";
+            $imagestatus = "approved.png";
+        } else if ($status == "R") {
+            $descstatus = "Revised";
+            $imagestatus = "revise.png";
+        } else {
+            $descstatus = "Cancelled";
+            $imagestatus = "reject.png";
+        }
+        $pdo = DB::connection('BTID')->getPdo();
+        $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_po_request ?, ?, ?, ?, ?, ?, ?, ?, ?;");
+        $sth->bindParam(1, $entity_cd);
+        $sth->bindParam(2, $project_no);
+        $sth->bindParam(3, $new_doc_no);
+        $sth->bindParam(4, $status);
+        $sth->bindParam(5, $level_no);
+        $sth->bindParam(6, $usergroup);
+        $sth->bindParam(7, $userid);
+        $sth->bindParam(8, $supervisor);
+        $sth->bindParam(9, $reason);
+        $sth->execute();
+        if ($sth == true) {
+            $msg = "You Have Successfully ".$descstatus." the Purchase Requisition No. ".$new_doc_no;
+            $notif = $descstatus." !";
+            $st = 'OK';
+            $image = $imagestatus;
+        } else {
+            $msg = "You Failed to ".$descstatus." the Purchase Requisition No.".$new_doc_no;
+            $notif = 'Fail to '.$descstatus.' !';
+            $st = 'OK';
+            $image = "reject.png";
+        }
+        $msg1 = array(
+            "Pesan" => $msg,
+            "St" => $st,
+            "notif" => $notif,
+            "image" => $image
+        );
+        return view("email.after", $msg1);
     }
 }

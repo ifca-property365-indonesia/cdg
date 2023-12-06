@@ -45,11 +45,12 @@
                                     <br><br>
                                     Mohon Masukan Password Anda
                                     </p>
-                                    <form id="frmEditor" class="form-horizontal" method="POST" action="{{ url('/api/' . $link . '/updatestatus') }}" enctype="multipart/form-data">
+                                    <form id="frmEditor" class="form-horizontal" method="POST" action="{{ url('/api/getaccess') }}" enctype="multipart/form-data">
                                     @csrf
                                     <input type="text" id="status" name="status" value="<?php echo $status?>" hidden>
                                     <input type="text" id="doc_no" name="doc_no" value="<?php echo $doc_no?>" hidden>
                                     <input type="text" id="encrypt" name="encrypt" value="<?php echo $encrypt?>" hidden>
+                                    <input type="text" id="module" name="module" value="<?php echo $module?>" hidden>
                                     <input type="text" id="email" name="email" value="<?php echo $email?>" hidden>
                                     <input type="password" id="password" name="password"><br>
                                     <input type="submit" class="btn" style="background-color:<?php echo $bgcolor?>;color:#ffffff;display:inline-block;font-size:13px;font-weight:600;line-height:44px;text-align:center;text-decoration:none;text-transform: uppercase; padding: 0px 40px;margin: 10px" value=<?php echo $valuebt?>>
