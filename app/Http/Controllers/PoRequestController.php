@@ -13,7 +13,7 @@ class PoRequestController extends Controller
 {
     public function processModule($data) 
     {
-        if (isset($data["req_hd_descs"])) {
+        if (strpos($data["req_hd_descs"], "\n") !== false) {
             $req_hd_descs = str_replace('\n', '(', $data["req_hd_descs"]) . ')';
         } else {
             $req_hd_descs = $data["req_hd_descs"];
