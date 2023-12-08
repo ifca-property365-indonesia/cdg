@@ -13,9 +13,6 @@ class PoRequestController extends Controller
 {
     public function processModule($data) 
     {
-
-        $new_doc_no = str_replace("/","-",$data["doc_no"]);
-
         if (isset($data["req_hd_descs"])) {
             $req_hd_descs = str_replace('\n', '(', $data["req_hd_descs"]) . ')';
         } else {
@@ -26,7 +23,7 @@ class PoRequestController extends Controller
             'sender'        => $data["sender"],
             'entity_name'   => $data["entity_name"],
             'descs'         => $data["descs"],
-            'doc_no'        => $new_doc_no,
+            'doc_no'        => $data["doc_no"],
             'req_hd_descs'  => $req_hd_descs,
             'req_hd_no'     => $data["req_hd_no"],
             'user_name'     => $data["user_name"],
@@ -41,7 +38,7 @@ class PoRequestController extends Controller
             'project_no'    => $data["project_no"],
             'email_address' => $data["email_addr"],
             'level_no'      => $data["level_no"],
-            'doc_no'        => $new_doc_no,
+            'doc_no'        => $data["doc_no"],
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"]
@@ -77,19 +74,12 @@ class PoRequestController extends Controller
     public function update($status, $encrypt, $reason)
     {
         $data = Crypt::decrypt($encrypt);
-        $entity_cd = $data["entity_cd"];
-        $project_no = $data["project_no"];
-        $level_no = $data["level_no"];
-        $usergroup = $data["usergroup"];
-        $user_id = $data["user_id"];
-        $supervisor = $data["supervisor"];
 
-        $new_doc_no = str_replace("-","/",$data["doc_no"]);
         $where = array(
-            'doc_no'        => $new_doc_no,
+            'doc_no'        => $data["doc_no"],
             'status'        => array("A",'R', 'C'),
-            'entity_cd'     => $entity_cd,
-            'level_no'      => $level_no,
+            'entity_cd'     => $data["entity_cd"],
+            'level_no'      => $data["level_no"],
             'type'          => 'Q',
             'module'        => 'PO',
         );
@@ -100,10 +90,10 @@ class PoRequestController extends Controller
         ->get();
 
         $where2 = array(
-            'doc_no'        => $new_doc_no,
+            'doc_no'        => $data["doc_no"],
             'status'        => 'P',
-            'entity_cd'     => $entity_cd,
-            'level_no'      => $level_no,
+            'entity_cd'     => $data["entity_cd"],
+            'level_no'      => $data["level_no"],
             'type'          => 'Q',
             'module'        => 'PO',
         );
@@ -114,7 +104,7 @@ class PoRequestController extends Controller
         ->get();
 
         if (count($query)>0) {
-            $msg = 'You Have Already Made a Request to Purchase Requisition No. '.$new_doc_no ;
+            $msg = 'You Have Already Made a Request to Purchase Requisition No. '.$data["doc_no"] ;
             $notif = 'Restricted !';
             $st  = 'OK';
             $image = "double_approve.png";
@@ -125,7 +115,7 @@ class PoRequestController extends Controller
                 "image" => $image
             );
         } else if (count($query2) == 0){
-            $msg = 'There is no Purchase Requisition with No. '.$new_doc_no ;
+            $msg = 'There is no Purchase Requisition with No. '.$data["doc_no"] ;
             $notif = 'Restricted !';
             $st  = 'OK';
             $image = "double_approve.png";
@@ -149,23 +139,23 @@ class PoRequestController extends Controller
         }
         $pdo = DB::connection('BTID')->getPdo();
         $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_po_request ?, ?, ?, ?, ?, ?, ?, ?, ?;");
-        $sth->bindParam(1, $entity_cd);
-        $sth->bindParam(2, $project_no);
-        $sth->bindParam(3, $new_doc_no);
+        $sth->bindParam(1, $data["entity_cd"]);
+        $sth->bindParam(2, $data["project_no"]);
+        $sth->bindParam(3, $data["doc_no"]);
         $sth->bindParam(4, $status);
-        $sth->bindParam(5, $level_no);
-        $sth->bindParam(6, $usergroup);
-        $sth->bindParam(7, $userid);
-        $sth->bindParam(8, $supervisor);
-        $sth->bindParam(9, $reason);
+        $sth->bindParam(5, $data["level_no"]);
+        $sth->bindParam(6, $data["usergroup"]);
+        $sth->bindParam(7, $data["userid"]);
+        $sth->bindParam(8, $data["supervisor"]);
+        $sth->bindParam(9, $data["reason"]);
         $sth->execute();
         if ($sth == true) {
-            $msg = "You Have Successfully ".$descstatus." the Purchase Requisition No. ".$new_doc_no;
+            $msg = "You Have Successfully ".$descstatus." the Purchase Requisition No. ".$data["doc_no"];
             $notif = $descstatus." !";
             $st = 'OK';
             $image = $imagestatus;
         } else {
-            $msg = "You Failed to ".$descstatus." the Purchase Requisition No.".$new_doc_no;
+            $msg = "You Failed to ".$descstatus." the Purchase Requisition No.".$data["doc_no"];
             $notif = 'Fail to '.$descstatus.' !';
             $st = 'OK';
             $image = "reject.png";
