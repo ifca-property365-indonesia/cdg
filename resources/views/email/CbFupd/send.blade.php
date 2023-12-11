@@ -14,13 +14,11 @@
             font-family: Vollkorn;
         }
     </style>
-    
 </head>
 
-<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #ffffff;">
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #ffffff;font-family:">
 	<div style="width: 100%; background-color: #ffffff; text-align: center;">
         <table width="80%" border="0" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="margin-left: auto;margin-right: auto;" >
-
             <tr>
                <td style="padding: 40px 0;">
                     <table style="width:100%;max-width:620px;margin:0 auto;">
@@ -38,20 +36,19 @@
                             <tr>
                                 <td style="padding: 30px 30px">
                                     <h5 style="text-align:left;margin-bottom: 24px; color: #000000; font-size: 20px; font-weight: 400; line-height: 28px;">Dear Mr./Mrs. {{ $dataArray['user_name'] }}, </h5>
-                                        <p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px;">{{ $dataArray['subject'] }}.</p><br>
-                                        <a href="{{ url('api') }}/processdata/{{ $dataArray['module'] }}/A/{{ $encryptedData }}" style="display: inline-block; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; text-decoration: none; text-transform: uppercase; padding: 10px 40px; background-color: #1ee0ac; border-radius: 4px; color: #ffffff;">Approve</a>
-                                        <a href="{{ url('api') }}/processdata/{{ $dataArray['module'] }}/R/{{ $encryptedData }}" style="display: inline-block; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; text-decoration: none; text-transform: uppercase; padding: 10px 40px; background-color: #f4bd0e; border-radius: 4px; color: #ffffff;">Revise</a>
-                                        <a href="{{ url('api') }}/processdata/{{ $dataArray['module'] }}/C/{{ $encryptedData }}" style="display: inline-block; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; text-decoration: none; text-transform: uppercase; padding: 10px 40px; background-color: #e85347; border-radius: 4px; color: #ffffff;">Cancel</a>
-                                        <br><p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px;">
-                                            <b>Thank you,</b><br>
-                                            {{ $dataArray['sender'] }}
-                                        </p><br>
-                                        @if ($dataArray['url_file'] !== '' && $dataArray['url_file'] !== "EMPTY")
-                                            <p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px">
-                                                <b style="font-style:italic;">To view the attachment, please click the link below:</b><br>
-                                                <a href="{{ $dataArray['url_file'] }}" target="_blank">{{ $dataArray['file_name'] }}</a>
-                                            </p>
-                                        @endif
+                                    <p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px;">{{ $dataArray['subject'] }}.</p><br>
+                                    <a href="{{ url('api') }}/processdata/{{ $dataArray['module'] }}/A/{{ $dataArray['doc_no'] }}/{{ $encryptedData }}" style="display: inline-block; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; text-decoration: none; text-transform: uppercase; padding: 10px 40px; background-color: #1ee0ac; border-radius: 4px; color: #ffffff;">Approve</a>
+                                    <a href="{{ url('api') }}/processdata/{{ $dataArray['module'] }}/R/{{ $dataArray['doc_no'] }}/{{ $encryptedData }}" style="display: inline-block; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; text-decoration: none; text-transform: uppercase; padding: 10px 40px; background-color: #f4bd0e; border-radius: 4px; color: #ffffff;">Revise</a>
+                                    <a href="{{ url('api') }}/processdata/{{ $dataArray['module'] }}/C/{{ $dataArray['doc_no'] }}/{{ $encryptedData }}" style="display: inline-block; font-size: 13px; font-weight: 600; line-height: 20px; text-align: center; text-decoration: none; text-transform: uppercase; padding: 10px 40px; background-color: #e85347; border-radius: 4px; color: #ffffff;">Cancel</a>
+                                    <br><p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px;">
+                                        <b>Thank you,</b><br>
+                                        {{ $dataArray['sender'] }}
+                                    </p><br>
+                                    <p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px;">
+                                        <b style="font-style:italic;">To view the attachment, please click the link below:</b><br>
+                                        <a href="{{ $dataArray['url1'] }}" target="_blank">{{ $dataArray['file_name1'] }}</a><br>
+                                        <a href="{{ $dataArray['url2'] }}" target="_blank">{{ $dataArray['file_name2'] }}</a>
+                                    </p>
                                 </td>
                             </tr>
                         </tbody>

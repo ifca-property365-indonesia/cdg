@@ -22,9 +22,8 @@ class MailDataController extends Controller
         return $result;
     }
 
-    public function processData($module='', $status='', $doc_no='', $encrypt='')
+    public function processData($module='', $status='', $encrypt='')
     {
-        // return $module.' '.$status.' '.$doc_no.' '.$encrypt;
         if ($status == 'A') {
             $name   = 'Approval';
             $bgcolor = '#40de1d';
@@ -41,7 +40,7 @@ class MailDataController extends Controller
         $dataArray = Crypt::decrypt($encrypt);
         $data = array(
             "status"    => $status,
-            "doc_no"    => $doc_no,
+            "doc_no"    => $dataArray["doc_no"],
             "email"     => $dataArray["email_address"],
             "module"    => $module,
             "encrypt"   => $encrypt,
@@ -64,8 +63,8 @@ class MailDataController extends Controller
         $email=$request->email;
         $module=$request->module;
         $reason=$request->reason;
-        if ($reason == NULL) {
-            $reason="0";
+        if (empty($request->reason)) {
+            $reason = '0';
         }
 
         $where = array('email' => $email);

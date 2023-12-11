@@ -23,9 +23,6 @@ class PoRequestController extends Controller
             'sender'        => $data["sender"],
             'entity_name'   => $data["entity_name"],
             'descs'         => $data["descs"],
-            'doc_no'        => $data["doc_no"],
-            'req_hd_descs'  => $req_hd_descs,
-            'req_hd_no'     => $data["req_hd_no"],
             'user_name'     => $data["user_name"],
             'url_file'      => $data["url_file"],
             'file_name'     => $data["file_name"],
@@ -147,7 +144,7 @@ class PoRequestController extends Controller
         $sth->bindParam(6, $data["usergroup"]);
         $sth->bindParam(7, $data["userid"]);
         $sth->bindParam(8, $data["supervisor"]);
-        $sth->bindParam(9, $data["reason"]);
+        $sth->bindParam(9, $reason);
         $sth->execute();
         if ($sth == true) {
             $msg = "You Have Successfully ".$descstatus." the Purchase Requisition No. ".$data["doc_no"];

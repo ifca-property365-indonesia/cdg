@@ -21,5 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 use App\Http\Controllers\MailDataController as MailData;
 
 Route::POST('/maildata', [MailData::class, 'receive']);
-Route::GET('/processdata/{module}/{status}/{doc_no}/{encrypt}', [MailData::class, 'processData']);
+Route::GET('/processdata/{module}/{status}/{encrypt}', [MailData::class, 'processData']);
 Route::POST('/getaccess', [MailData::class, 'getAccess']);
+
+
+use App\Http\Controllers\StaffActionController as StaffAction;
+Route::POST('/staffaction', [StaffAction::class, 'staffaction']);
