@@ -29,7 +29,7 @@ class CbFupdController extends Controller
 
         $dataArray = array(
             'sender'        => $data["sender"],
-            'url'           => $url_data,
+            'url_file'      => $url_data,
             'file_name'     => $file_data,
             'doc_no'        => $data["doc_no"],
             'entity_name'   => $data["entity_name"],

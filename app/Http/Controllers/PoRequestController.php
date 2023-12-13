@@ -18,14 +18,28 @@ class PoRequestController extends Controller
         } else {
             $req_hd_descs = $data["req_hd_descs"];
         }
+
+        $list_of_urls = explode(',', $data["url_file"]);
+        $list_of_files = explode(',', $data["file_name"]);
+
+        $url_data = [];
+        $file_data = [];
+
+        foreach ($list_of_urls as $url) {
+            $url_data[] = $url;
+        }
+
+        foreach ($list_of_files as $file) {
+            $file_data[] = $file;
+        }
         
         $dataArray = array(
             'sender'        => $data["sender"],
             'entity_name'   => $data["entity_name"],
             'descs'         => $data["descs"],
             'user_name'     => $data["user_name"],
-            'url_file'      => $data["url_file"],
-            'file_name'     => $data["file_name"],
+            'url_file'      => $url_data,
+            'file_name'     => $file_data,
             'module'        => "PoRequest",
             'subject'       => "Need Approval for Purchase Requisition No. ".$data['req_hd_no'],
         );

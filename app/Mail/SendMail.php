@@ -38,7 +38,7 @@ class SendMail extends Mailable
     {
 
         return $this->subject($this->dataArray['subject'])
-                    ->view('email.'.$this->dataArray['module'].'.send')
+                    ->view('email.send')
                     ->with([
                         'encryptedData' => $this->encryptedData,
                         'dataArray' => $this->dataArray,
