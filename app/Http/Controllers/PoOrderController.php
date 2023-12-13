@@ -9,15 +9,10 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use App\Mail\SendMail;
 
-class CbPpuController extends Controller
+class PoOrderController extends Controller
 {
-    public function processModule($data)
+    public function processModule($data) 
     {
-        if (strpos($data["ppu_descs"], "\n") !== false) {
-            $ppu_descs = str_replace("\n", ' (', $data["ppu_descs"]) . ')';
-        } else {
-            $ppu_descs = $data["ppu_descs"];
-        }
 
         $list_of_urls = explode(',', $data["url_file"]);
         $list_of_files = explode(',', $data["file_name"]);
@@ -32,18 +27,16 @@ class CbPpuController extends Controller
         foreach ($list_of_files as $file) {
             $file_data[] = $file;
         }
-
+        
         $dataArray = array(
-            'sender'        => $request->sender,
+            'sender'        => $data["sender"],
+            'entity_name'   => $data["entity_name"],
+            'descs'         => $data["descs"],
+            'user_name'     => $data["user_name"],
             'url_file'      => $url_data,
             'file_name'     => $file_data,
-            'entity_name'   => $request->entity_name,
-            'email_address' => $request->email_addr,
-            'descs'         => $request->descs,
-            'user_name'     => $request->user_name,
-            'reason'        => $request->reason,
-            'module'        => 'CbPpu',
-            'subject'       => "Please approve Payment Request No. ".$data['ppu_no']." for ".$ppu_descs,
+            'module'        => "PoOrder",
+            'subject'       => "Please approve Purchase Order No. ".$data['doc_no'],
         );
 
         $data2Encrypt = array(
@@ -57,8 +50,6 @@ class CbPpuController extends Controller
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"]
         );
-
-        
 
         // Melakukan enkripsi pada $dataArray
         $encryptedData = Crypt::encrypt($data2Encrypt);
@@ -96,8 +87,8 @@ class CbPpuController extends Controller
             'status'        => array("A",'R', 'C'),
             'entity_cd'     => $data["entity_cd"],
             'level_no'      => $data["level_no"],
-            'type'          => 'U',
-            'module'        => 'CB',
+            'type'          => 'A',
+            'module'        => 'PO',
         );
 
         $query = DB::connection('BTID')
@@ -110,8 +101,8 @@ class CbPpuController extends Controller
             'status'        => 'P',
             'entity_cd'     => $data["entity_cd"],
             'level_no'      => $data["level_no"],
-            'type'          => 'U',
-            'module'        => 'CB',
+            'type'          => 'A',
+            'module'        => 'PO',
         );
 
         $query2 = DB::connection('BTID')
@@ -120,7 +111,7 @@ class CbPpuController extends Controller
         ->get();
 
         if (count($query)>0) {
-            $msg = 'You Have Already Made a Request to Payment Request No. '.$data["doc_no"] ;
+            $msg = 'You Have Already Made a Request to Purchase Order No. '.$data["doc_no"] ;
             $notif = 'Restricted !';
             $st  = 'OK';
             $image = "double_approve.png";
@@ -131,7 +122,7 @@ class CbPpuController extends Controller
                 "image" => $image
             );
         } else if (count($query2) == 0){
-            $msg = 'There is no Payment Request with No. '.$data["doc_no"] ;
+            $msg = 'There is no Purchase Order with No. '.$data["doc_no"] ;
             $notif = 'Restricted !';
             $st  = 'OK';
             $image = "double_approve.png";
@@ -154,7 +145,7 @@ class CbPpuController extends Controller
             $imagestatus = "reject.png";
         }
         $pdo = DB::connection('BTID')->getPdo();
-        $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_cb_ppu ?, ?, ?, ?, ?, ?, ?, ?, ?, ?;");
+        $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_po_order ?, ?, ?, ?, ?, ?, ?, ?, ?, ?;");
         $sth->bindParam(1, $data["entity_cd"]);
         $sth->bindParam(2, $data["project_no"]);
         $sth->bindParam(3, $data["doc_no"]);
@@ -167,12 +158,12 @@ class CbPpuController extends Controller
         $sth->bindParam(10, $reason);
         $sth->execute();
         if ($sth == true) {
-            $msg = "You Have Successfully ".$descstatus." the Payment Request No. ".$data["doc_no"];
+            $msg = "You Have Successfully ".$descstatus." the Purchase Order No. ".$data["doc_no"];
             $notif = $descstatus." !";
             $st = 'OK';
             $image = $imagestatus;
         } else {
-            $msg = "You Failed to ".$descstatus." the Payment Request No.".$data["doc_no"];
+            $msg = "You Failed to ".$descstatus." the Purchase Order No.".$data["doc_no"];
             $notif = 'Fail to '.$descstatus.' !';
             $st = 'OK';
             $image = "reject.png";

@@ -13,6 +13,13 @@ class CbFupdController extends Controller
 {
     public function processModule($data) 
     {
+        if (strpos($data["band_hd_descs"], "\n") !== false) {
+            $band_hd_descs = str_replace("\n", ' (', $data["band_hd_descs"]) . ')';
+        } else {
+            $band_hd_descs = $data["band_hd_descs"];
+        }
+
+
         $list_of_urls = explode(',', $data["url_file"]);
         $list_of_files = explode(',', $data["file_name"]);
 
@@ -36,7 +43,7 @@ class CbFupdController extends Controller
             'user_name'     => $data["user_name"],
             'reason'        => $data["reason"],
             'module'        => "CbFupd",
-            'subject'       => "Please approve Propose Transfer to Bank No. ".$data['doc_no']." for ".$data['band_hd_descs'],
+            'subject'       => "Please approve Propose Transfer to Bank No. ".$data['doc_no']." for ".$band_hd_descs,
         );
 
         $data2Encrypt = array(
