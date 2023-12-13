@@ -13,25 +13,30 @@ class CbFupdController extends Controller
 {
     public function processModule($data) 
     {
-        $pieces_url = explode(",", $data["url_file"]);
-        $url1 = $pieces_url[0];
-        $url2 = $pieces_url[1];
+        $list_of_urls = explode(',', $data["url_file"]);
+        $list_of_files = explode(',', $data["file_name"]);
 
-        $pieces_file = explode(",", $data["file_name"]);
-        $file_name1 = $pieces_file[0];
-        $file_name2 = $pieces_file[1];
+        $url_data = [];
+        $file_data = [];
+
+        foreach ($list_of_urls as $url) {
+            $url_data[] = $url;
+        }
+
+        foreach ($list_of_files as $file) {
+            $file_data[] = $file;
+        }
 
         $dataArray = array(
             'sender'        => $data["sender"],
-            'url1'          => $url1,
-            'url2'          => $url2,
-            'file_name1'    => $file_name1,
-            'file_name2'    => $file_name2,
+            'url'           => $url_data,
+            'file_name'     => $file_data,
+            'doc_no'        => $data["doc_no"],
             'entity_name'   => $data["entity_name"],
             'user_name'     => $data["user_name"],
             'reason'        => $data["reason"],
             'module'        => "CbFupd",
-            'subject'       => "Please approve Propose Transfer to Bank No.  ".$data['doc_no']." for ".$data['band_hd_descs'],
+            'subject'       => "Please approve Propose Transfer to Bank No. ".$data['doc_no']." for ".$data['band_hd_descs'],
         );
 
         $data2Encrypt = array(
@@ -45,6 +50,8 @@ class CbFupdController extends Controller
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"]
         );
+
+        // var_dump($data2Encrypt);
 
         // Melakukan enkripsi pada $dataArray
         $encryptedData = Crypt::encrypt($data2Encrypt);

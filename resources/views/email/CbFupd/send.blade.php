@@ -44,10 +44,13 @@
                                         <b>Thank you,</b><br>
                                         {{ $dataArray['sender'] }}
                                     </p><br>
-                                    <p style="text-align:left;margin-bottom: 15px; color: #000000; font-size: 16px;">
-                                        <b style="font-style:italic;">To view the attachment, please click the link below:</b><br>
-                                        <a href="{{ $dataArray['url1'] }}" target="_blank">{{ $dataArray['file_name1'] }}</a><br>
-                                        <a href="{{ $dataArray['url2'] }}" target="_blank">{{ $dataArray['file_name2'] }}</a>
+                                    <p style="text-align:left; margin-bottom: 15px; color: #000000; font-size: 16px;">
+                                        <b style="font-style:italic;">To view the attachment, please click the links below:</b><br>
+                                        @foreach($dataArray['url'] as $key => $url)
+                                            @if($url !== '' && $dataArray['file_name'][$key] !== '' && $url !== 'EMPTY' && $dataArray['file_name'][$key] !== 'EMPTY')
+                                                <a href="{{ $url }}" target="_blank">{{ $dataArray['file_name'][$key] }}</a><br>
+                                            @endif
+                                        @endforeach
                                     </p>
                                 </td>
                             </tr>
