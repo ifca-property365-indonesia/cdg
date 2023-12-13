@@ -79,4 +79,103 @@ class CbFupdController extends Controller
             return "Gagal mengirim email: " . $e->getMessage();
         }
     }
+
+    public function update($status, $encrypt, $reason)
+    {
+        $data = Crypt::decrypt($encrypt);
+
+        $where = array(
+            'doc_no'        => $data["doc_no"],
+            'status'        => array("A",'R', 'C'),
+            'entity_cd'     => $data["entity_cd"],
+            'level_no'      => $data["level_no"],
+            'type'          => 'E',
+            'module'        => 'CB',
+        );
+
+        $query = DB::connection('BTID')
+        ->table('mgr.cb_cash_request_appr')
+        ->where($where)
+        ->get();
+
+        $where2 = array(
+            'doc_no'        => $data["doc_no"],
+            'status'        => 'P',
+            'entity_cd'     => $data["entity_cd"],
+            'level_no'      => $data["level_no"],
+            'type'          => 'E',
+            'module'        => 'CB',
+        );
+
+        $query2 = DB::connection('BTID')
+        ->table('mgr.cb_cash_request_appr')
+        ->where($where2)
+        ->get();
+
+        if (count($query)>0) {
+            $msg = 'You Have Already Made a Request to Propose Transfer to Bank No. '.$data["doc_no"] ;
+            $notif = 'Restricted !';
+            $st  = 'OK';
+            $image = "double_approve.png";
+            $msg1 = array(
+                "Pesan" => $msg,
+                "St" => $st,
+                "notif" => $notif,
+                "image" => $image
+            );
+        } else if (count($query2) == 0){
+            $msg = 'There is no Propose Transfer to Bank with No. '.$data["doc_no"] ;
+            $notif = 'Restricted !';
+            $st  = 'OK';
+            $image = "double_approve.png";
+            $msg1 = array(
+                "Pesan" => $msg,
+                "St" => $st,
+                "notif" => $notif,
+                "image" => $image
+            );
+        }
+
+        if ($status == "A") {
+            $descstatus = "Approved";
+            $imagestatus = "approved.png";
+        } else if ($status == "R") {
+            $descstatus = "Revised";
+            $imagestatus = "revise.png";
+        } else {
+            $descstatus = "Cancelled";
+            $imagestatus = "reject.png";
+        }
+        $pdo = DB::connection('BTID')->getPdo();
+        $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_cb_fupd ?, ?, ?, ?, ?, ?, ?, ?, ?, ?;");
+        $sth->bindParam(1, $data["entity_cd"]);
+        $sth->bindParam(2, $data["project_no"]);
+        $sth->bindParam(3, $data["doc_no"]);
+        $sth->bindParam(4, $data["trx_type"]);
+        $sth->bindParam(5, $status);
+        $sth->bindParam(6, $data["level_no"]);
+        $sth->bindParam(7, $data["usergroup"]);
+        $sth->bindParam(8, $data["user_id"]);
+        $sth->bindParam(9, $data["supervisor"]);
+        $sth->bindParam(10, $reason);
+        $sth->execute();
+        if ($sth == true) {
+            $msg = "You Have Successfully ".$descstatus." the Propose Transfer to Bank No. ".$data["doc_no"];
+            $notif = $descstatus." !";
+            $st = 'OK';
+            $image = $imagestatus;
+        } else {
+            $msg = "You Failed to ".$descstatus." the Propose Transfer to Bank No.".$data["doc_no"];
+            $notif = 'Fail to '.$descstatus.' !';
+            $st = 'OK';
+            $image = "reject.png";
+        }
+        $msg1 = array(
+            "Pesan" => $msg,
+            "St" => $st,
+            "notif" => $notif,
+            "image" => $image
+        );
+        return view("email.after", $msg1);
+    }
 }
