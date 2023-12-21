@@ -40,8 +40,8 @@
                             <tr>
                                 <td style="text-align:center;padding: 50px 30px;">
                                     <img style="width:88px; margin-bottom:24px;" src="{{ url('public/images/double_approve.png') }}" alt="Verified">
-                                    <p>Anda akan melakukan {{ $name }} untuk Doc No. {{ $doc_no }}</p>
-                                    <p>Mohon Berikan Alasan untuk permintaan anda : </p>
+                                    <p>You will do a {{ $name }} for Doc No. {{ $doc_no }}</p>
+                                    <p>Please provide reasons for your request : </p>
                                     <form id="frmEditor" class="form-horizontal" method="POST" action="{{ url('/api/getaccess') }}" enctype="multipart/form-data">
                                     @csrf
                                     <input type="text" id="status" name="status" value="<?php echo $status?>" hidden>
@@ -52,7 +52,7 @@
                                     <div class="form-group">
                                         <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
                                     </div>
-                                    <p>Mohon Masukan Password Anda</p>
+                                    <p>Please Enter Your Password</p>
                                     <input type="password" id="password" name="password"><br>
                                     <input type="submit" class="btn" style="background-color:<?php echo $bgcolor?>;color:#ffffff;display:inline-block;font-size:13px;font-weight:600;line-height:44px;text-align:center;text-decoration:none;text-transform: uppercase; padding: 0px 40px;margin: 10px" value=<?php echo $valuebt?>>
                                     </form>

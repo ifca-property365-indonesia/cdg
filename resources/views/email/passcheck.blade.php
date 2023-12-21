@@ -41,9 +41,9 @@
                                 <td style="text-align:center;padding: 50px 30px;">
                                     <img style="width:88px; margin-bottom:24px;" src="{{ url('public/images/double_approve.png') }}" alt="Verified">
                                     <p>
-                                    Anda akan melakukan {{ $name }} untuk Doc No. {{ $doc_no }}
-                                    <br><br>
-                                    Mohon Masukan Password Anda
+                                        You will do a {{ $name }} for Doc No. {{ $doc_no }}
+                                    <br><br>        
+                                        Please Enter Your Password
                                     </p>
                                     <form id="frmEditor" class="form-horizontal" method="POST" action="{{ url('/api/getaccess') }}" enctype="multipart/form-data">
                                     @csrf
