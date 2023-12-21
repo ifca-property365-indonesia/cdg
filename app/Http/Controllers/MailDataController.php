@@ -80,8 +80,6 @@ class MailDataController extends Controller
         $username = $data->name;
         $password = $password;
 
-        return getenv('DB_HOST3');
-
         try {
             // Attempt to connect to the database
             $connection = new \PDO("sqlsrv:Server=$servername,$port;Database=$dbname", $username, $password);
@@ -90,17 +88,13 @@ class MailDataController extends Controller
             $methodName = 'update';
             $arguments = [$status, $encrypt, $reason];
             $result = call_user_func_array([$controller, $methodName], $arguments);
-            // $result = $this->update($status, $encrypt, $reason);
             return $result;
         } catch (\Exception $e) {
             if ($e->getCode() == 2002 || $e->getCode() == 50000) {
-                // echo "Server not found or connection failed.";
                 $msg = "Server not found or connection failed.";
             } elseif ($e->getCode() == 28000) {
-                // echo "Authentication failed: Invalid username or password.";
                 $msg = "Authentication failed: Invalid username or password.";
             } else {
-                // echo "Connection failed: " . $e->getMessage();
                 $msg = "Connection failed: " . $e->getMessage();
             }
             $msg1 = array(
