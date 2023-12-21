@@ -80,6 +80,8 @@ class MailDataController extends Controller
         $username = $data->name;
         $password = $password;
 
+        return getenv('DB_HOST3');
+
         try {
             // Attempt to connect to the database
             $connection = new \PDO("sqlsrv:Server=$servername,$port;Database=$dbname", $username, $password);
