@@ -43,7 +43,8 @@ class CbFupdController extends Controller
             'user_name'     => $data["user_name"],
             'reason'        => $data["reason"],
             'module'        => "CbFupd",
-            'subject'       => "Please approve Propose Transfer to Bank No. ".$data['doc_no']." for ".$band_hd_descs,
+            'body'          => "Please approve Propose Transfer to Bank No. ".$data['doc_no']." for ".$band_hd_descs,
+            'subject'       => "Need Approval for Propose Transfer to Bank No. ".$data['doc_no'],
         );
 
         $data2Encrypt = array(

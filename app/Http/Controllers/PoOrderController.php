@@ -36,7 +36,8 @@ class PoOrderController extends Controller
             'url_file'      => $url_data,
             'file_name'     => $file_data,
             'module'        => "PoOrder",
-            'subject'       => "Please approve Purchase Order No. ".$data['doc_no'],
+            'body'          => "Please approve Purchase Order No. ".$data['doc_no'],
+            'subject'       => "Need Approval for Purchase Order No.  ".$data['doc_no'],
         );
 
         $data2Encrypt = array(

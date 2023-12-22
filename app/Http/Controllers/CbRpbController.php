@@ -42,7 +42,8 @@ class CbRpbController extends Controller
             'user_name'     => $request->user_name,
             'reason'        => $request->reason,
             'module'        => 'CbRpb',
-            'subject'       => "Please approve Recapitulation Bank No. ".$data['doc_no']." for ".$rpb_descs,
+            'body'          => "Please approve Recapitulation Bank No. ".$data['doc_no']." for ".$rpb_descs,
+            'subject'       => "Need Approval for Recapitulation Bank No.  ".$data['doc_no'],
         );
 
         $data2Encrypt = array(

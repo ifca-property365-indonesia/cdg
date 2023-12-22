@@ -41,7 +41,8 @@ class PoRequestController extends Controller
             'url_file'      => $url_data,
             'file_name'     => $file_data,
             'module'        => "PoRequest",
-            'subject'       => "Please approve Purchase Requisition No. ".$data['req_hd_no']." for ".$req_hd_descs,
+            'body'          => "Please approve Purchase Requisition No. ".$data['req_hd_no']." for ".$req_hd_descs,
+            'subject'       => "Need Approval for Purchase Requisition No.  ".$data['req_hd_no'],
         );
 
         $data2Encrypt = array(

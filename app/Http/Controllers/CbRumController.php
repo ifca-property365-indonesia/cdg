@@ -42,7 +42,8 @@ class CbRumController extends Controller
             'user_name'     => $request->user_name,
             'reason'        => $request->reason,
             'module'        => 'CbRum',
-            'subject'       => "Please approve Cash Advance Settlement No. ".$data['doc_no']." for ".$remarks_hd,
+            'body'          => "Please approve Cash Advance Settlement No. ".$data['doc_no']." for ".$remarks_hd,
+            'subject'       => "Need Approval for Cash Advance Settlement No.  ".$data['doc_no'],
         );
 
         $data2Encrypt = array(

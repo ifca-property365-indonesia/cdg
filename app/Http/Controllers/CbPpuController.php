@@ -43,7 +43,8 @@ class CbPpuController extends Controller
             'user_name'     => $request->user_name,
             'reason'        => $request->reason,
             'module'        => 'CbPpu',
-            'subject'       => "Please approve Payment Request No. ".$data['ppu_no']." for ".$ppu_descs,
+            'body'          => "Please approve Payment Request No. ".$data['ppu_no']." for ".$ppu_descs,
+            'subject'       => "Need Approval for Payment Request No.  ".$data['ppu_no'],
         );
 
         $data2Encrypt = array(
