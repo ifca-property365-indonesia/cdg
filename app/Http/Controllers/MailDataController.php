@@ -74,9 +74,9 @@ class MailDataController extends Controller
                     ->select('name')
                     ->first();
 
-        $servername = getenv('DB_HOST3');
-        $port = getenv('DB_PORT3');
-        $dbname = getenv('DB_DATABASE3');
+        $servername = getenv('DB_HOST3') ?: 'uat.ifca.co.id';
+        $port = getenv('DB_PORT3') ?: '1436';
+        $dbname = getenv('DB_DATABASE3') ?: 'BTID_LIVE';
         $username = $data->name;
         $password = $password;
 
