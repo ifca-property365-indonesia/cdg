@@ -34,14 +34,14 @@ class CbPpuController extends Controller
         }
 
         $dataArray = array(
-            'sender'        => $request->sender,
+            'sender'        => $data['sender'],
             'url_file'      => $url_data,
             'file_name'     => $file_data,
-            'entity_name'   => $request->entity_name,
-            'email_address' => $request->email_addr,
-            'descs'         => $request->descs,
-            'user_name'     => $request->user_name,
-            'reason'        => $request->reason,
+            'entity_name'   => $data['entity_name'],
+            'email_address' => $data['email_addr'],
+            'descs'         => $data['descs'],
+            'user_name'     => $data['user_name'],
+            'reason'        => $data['reason'],
             'module'        => 'CbPpu',
             'body'          => "Please approve Payment Request No. ".$data['ppu_no']." for ".$ppu_descs,
             'subject'       => "Need Approval for Payment Request No.  ".$data['ppu_no'],
