@@ -92,7 +92,7 @@ class PoSelectionController extends Controller
     {
         $data = Crypt::decrypt($encrypt);
         $dateTime = DateTime::createFromFormat('d-m-Y', $data["trx_date"]);
-        $formattedDate = $dateTime->format('Y-m-d');
+        $formattedDate = $dateTime->format('d-m-Y');
         
         $where = array(
             'doc_no'        => $data["doc_no"],
