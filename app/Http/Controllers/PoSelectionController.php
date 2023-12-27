@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use App\Mail\SendMail;
+use PDO;
+use DateTime;
 
 class PoSelectionController extends Controller
 {
@@ -54,8 +56,6 @@ class PoSelectionController extends Controller
             'trx_date'      => $data["trx_date"],
             'doc_no'        => $data["doc_no"],
             'ref_no'        => $data["ref_no"],
-            'request_no'    => $data["request_no"],
-            'trx_type'      => $data["trx_type"],
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"]
@@ -91,7 +91,9 @@ class PoSelectionController extends Controller
     public function update($status, $encrypt, $reason)
     {
         $data = Crypt::decrypt($encrypt);
-
+        $dateTime = DateTime::createFromFormat('d-m-Y', $data["trx_date"]);
+        $formattedDate = $dateTime->format('Y-m-d');
+        
         $where = array(
             'doc_no'        => $data["doc_no"],
             'status'        => array("A",'R', 'C'),
@@ -155,18 +157,18 @@ class PoSelectionController extends Controller
             $imagestatus = "reject.png";
         }
         $pdo = DB::connection('BTID')->getPdo();
-        $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_po_selection ?, ?, ?, ?, ?, ?, ?, ?, ?, ?;");
+        $sth = $pdo->prepare("SET NOCOUNT ON; EXEC mgr.x_send_mail_approval_po_selection ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?;");
         $sth->bindParam(1, $data["entity_cd"]);
         $sth->bindParam(2, $data["project_no"]);
         $sth->bindParam(3, $data["doc_no"]);
-        $sth->bindParam(3, $data["request_no"]);
-        $sth->bindParam(4, $data["trx_date"]);
-        $sth->bindParam(5, $status);
-        $sth->bindParam(6, $data["level_no"]);
-        $sth->bindParam(7, $data["usergroup"]);
-        $sth->bindParam(8, $data["user_id"]);
-        $sth->bindParam(9, $data["supervisor"]);
-        $sth->bindParam(10, $reason);
+        $sth->bindParam(4, $data["ref_no"]);
+        $sth->bindParam(5, $formattedDate);
+        $sth->bindParam(6, $status);
+        $sth->bindParam(7, $data["level_no"]);
+        $sth->bindParam(8, $data["usergroup"]);
+        $sth->bindParam(9, $data["user_id"]);
+        $sth->bindParam(10, $data["supervisor"]);
+        $sth->bindParam(11, $reason);
         $sth->execute();
         if ($sth == true) {
             $msg = "You Have Successfully ".$descstatus." the Purchase Selection No. ".$data["doc_no"];
