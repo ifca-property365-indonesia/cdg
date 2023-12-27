@@ -34,13 +34,13 @@ class CbRumController extends Controller
         }
 
         $dataArray = array(
-            'sender'        => $request->sender,
+            'sender'        => $data['sender'],
             'url_file'      => $url_data,
             'file_name'     => $file_data,
-            'entity_name'   => $request->entity_name,
-            'email_address' => $request->email_addr,
-            'user_name'     => $request->user_name,
-            'reason'        => $request->reason,
+            'entity_name'   => $data['entity_name'],
+            'email_address' => $data['email_addr'],
+            'user_name'     => $data['user_name'],
+            'reason'        => $data['reason'],
             'module'        => 'CbRum',
             'body'          => "Please approve Cash Advance Settlement No. ".$data['doc_no']." for ".$remarks_hd,
             'subject'       => "Need Approval for Cash Advance Settlement No.  ".$data['doc_no'],
