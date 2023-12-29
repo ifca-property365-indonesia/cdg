@@ -59,6 +59,8 @@ class PoSelectionController extends Controller
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"],
+            'type'          => 'S',
+            'type_module'   => 'PO',
             'text'          => 'Purchase Selection'
         );
 

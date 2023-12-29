@@ -56,6 +56,8 @@ class CbRpbController extends Controller
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"],
+            'type'          => 'D',
+            'type_module'   => 'CB',
             'text'          => 'Recapitulation Bank'
         );
 

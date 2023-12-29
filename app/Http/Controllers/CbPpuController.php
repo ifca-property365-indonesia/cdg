@@ -57,6 +57,8 @@ class CbPpuController extends Controller
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"],
+            'type'          => 'U',
+            'type_module'   => 'CB',
             'text'          => 'Payment Request'
         );
 

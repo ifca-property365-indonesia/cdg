@@ -54,6 +54,8 @@ class PoRequestController extends Controller
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
             'supervisor'    => $data["supervisor"],
+            'type'          => 'Q',
+            'type_module'   => 'PO',
             'text'          => 'Purchase Requisition'
         );
 

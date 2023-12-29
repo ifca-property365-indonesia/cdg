@@ -30,8 +30,8 @@ class MailDataController extends Controller
             'status'        => array("A",'R', 'C'),
             'entity_cd'     => $data["entity_cd"],
             'level_no'      => $data["level_no"],
-            'type'          => 'Q',
-            'module'        => 'PO',
+            'type'          => $data["type"],
+            'module'        => $data["type_module"],
         );
 
         $query = DB::connection('BTID')
@@ -44,8 +44,8 @@ class MailDataController extends Controller
             'status'        => 'P',
             'entity_cd'     => $data["entity_cd"],
             'level_no'      => $data["level_no"],
-            'type'          => 'Q',
-            'module'        => 'PO',
+            'type'          => $data["type"],
+            'module'        => $data["type_module"],
         );
 
         $query2 = DB::connection('BTID')
