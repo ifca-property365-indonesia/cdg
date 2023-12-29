@@ -58,7 +58,8 @@ class PoSelectionController extends Controller
             'ref_no'        => $data["ref_no"],
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
-            'supervisor'    => $data["supervisor"]
+            'supervisor'    => $data["supervisor"],
+            'text'          => 'Purchase Selection'
         );
 
         // Melakukan enkripsi pada $dataArray
@@ -93,58 +94,6 @@ class PoSelectionController extends Controller
         $data = Crypt::decrypt($encrypt);
         $dateTime = DateTime::createFromFormat('d-m-Y', $data["trx_date"]);
         $formattedDate = $dateTime->format('d-m-Y');
-        
-        $where = array(
-            'doc_no'        => $data["doc_no"],
-            'status'        => array("A",'R', 'C'),
-            'entity_cd'     => $data["entity_cd"],
-            'level_no'      => $data["level_no"],
-            'type'          => 'S',
-            'module'        => 'PO',
-        );
-
-        $query = DB::connection('BTID')
-        ->table('mgr.cb_cash_request_appr')
-        ->where($where)
-        ->get();
-
-        $where2 = array(
-            'doc_no'        => $data["doc_no"],
-            'status'        => 'P',
-            'entity_cd'     => $data["entity_cd"],
-            'level_no'      => $data["level_no"],
-            'type'          => 'S',
-            'module'        => 'PO',
-        );
-
-        $query2 = DB::connection('BTID')
-        ->table('mgr.cb_cash_request_appr')
-        ->where($where2)
-        ->get();
-
-        if (count($query)>0) {
-            $msg = 'You Have Already Made a Request to Purchase Selection No. '.$data["doc_no"] ;
-            $notif = 'Restricted !';
-            $st  = 'OK';
-            $image = "double_approve.png";
-            $msg1 = array(
-                "Pesan" => $msg,
-                "St" => $st,
-                "notif" => $notif,
-                "image" => $image
-            );
-        } else if (count($query2) == 0){
-            $msg = 'There is no Purchase Selection with No. '.$data["doc_no"] ;
-            $notif = 'Restricted !';
-            $st  = 'OK';
-            $image = "double_approve.png";
-            $msg1 = array(
-                "Pesan" => $msg,
-                "St" => $st,
-                "notif" => $notif,
-                "image" => $image
-            );
-        }
 
         if ($status == "A") {
             $descstatus = "Approved";

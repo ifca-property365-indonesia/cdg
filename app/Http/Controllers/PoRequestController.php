@@ -53,7 +53,8 @@ class PoRequestController extends Controller
             'doc_no'        => $data["doc_no"],
             'usergroup'     => $data["usergroup"],
             'user_id'       => $data["user_id"],
-            'supervisor'    => $data["supervisor"]
+            'supervisor'    => $data["supervisor"],
+            'text'          => 'Purchase Requisition'
         );
 
         // Melakukan enkripsi pada $dataArray
@@ -86,59 +87,7 @@ class PoRequestController extends Controller
     public function update($status, $encrypt, $reason)
     {
         $data = Crypt::decrypt($encrypt);
-
-        $where = array(
-            'doc_no'        => $data["doc_no"],
-            'status'        => array("A",'R', 'C'),
-            'entity_cd'     => $data["entity_cd"],
-            'level_no'      => $data["level_no"],
-            'type'          => 'Q',
-            'module'        => 'PO',
-        );
-
-        $query = DB::connection('BTID')
-        ->table('mgr.cb_cash_request_appr')
-        ->where($where)
-        ->get();
-
-        $where2 = array(
-            'doc_no'        => $data["doc_no"],
-            'status'        => 'P',
-            'entity_cd'     => $data["entity_cd"],
-            'level_no'      => $data["level_no"],
-            'type'          => 'Q',
-            'module'        => 'PO',
-        );
-
-        $query2 = DB::connection('BTID')
-        ->table('mgr.cb_cash_request_appr')
-        ->where($where2)
-        ->get();
-
-        if (count($query)>0) {
-            $msg = 'You Have Already Made a Request to Purchase Requisition No. '.$data["doc_no"] ;
-            $notif = 'Restricted !';
-            $st  = 'OK';
-            $image = "double_approve.png";
-            $msg1 = array(
-                "Pesan" => $msg,
-                "St" => $st,
-                "notif" => $notif,
-                "image" => $image
-            );
-        } else if (count($query2) == 0){
-            $msg = 'There is no Purchase Requisition with No. '.$data["doc_no"] ;
-            $notif = 'Restricted !';
-            $st  = 'OK';
-            $image = "double_approve.png";
-            $msg1 = array(
-                "Pesan" => $msg,
-                "St" => $st,
-                "notif" => $notif,
-                "image" => $image
-            );
-        }
-
+        
         if ($status == "A") {
             $descstatus = "Approved";
             $imagestatus = "approved.png";
