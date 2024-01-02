@@ -71,8 +71,6 @@ class PoOrderController extends Controller
                 
                 $sentTo = is_array($emailAddresses) ? implode(', ', $emailAddresses) : $emailAddresses;
                 Log::channel('sendmail')->info('Email berhasil dikirim ke: ' . $sentTo);
-                Log::channel('sendmail')->info('Status Code = 200');
-                return 200;
                 return "Email berhasil dikirim ke: " . $sentTo;
             } else {
                 Log::channel('sendmail')->warning('Tidak ada alamat email yang diberikan.');
