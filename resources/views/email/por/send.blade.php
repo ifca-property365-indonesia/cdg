@@ -76,7 +76,7 @@
                                                 <p style="text-align:left; margin-bottom: 15px; color: #000000; font-size: 16px;">
                                                     <span>To view a detailed product list, description, and estimate price per item, please click on the link below :</span><br>
                                             @endif
-                                            <a href="{{ $url_file }}" target="_blank">{{ $dataArray['file_name'][$key] }}</a><br>
+                                            <a href="{{ $url_file }}" target="_blank">{{ $dataArray['file_name'][$key] }}</a><br><br>
                                         @endif
                                     @endforeach
 
@@ -97,7 +97,7 @@
                                                 <p style="text-align:left; margin-bottom: 15px; color: #000000; font-size: 16px;">
                                                     <span>This request to purchase comes with additional supporting documents, such as detailed specifications, that you can access from the link below :</span><br>
                                             @endif
-                                            <a href="{{ $doc_link }}" target="_blank">{{ $doc_link }}</a><br>
+                                            <a href="{{ $doc_link }}" target="_blank">{{ $doc_link }}</a><br><br>
                                         @endif
                                     @endforeach
 

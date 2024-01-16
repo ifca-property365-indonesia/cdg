@@ -20,9 +20,9 @@ class PoRequestController extends Controller
             $req_hd_descs = $data["req_hd_descs"];
         }
 
-        $list_of_urls = explode(';', $data["url_file"]);
-        $list_of_files = explode(';', $data["file_name"]);
-        $list_of_doc = explode(';', $data["document_link"]);
+        $list_of_urls = explode('; ', $data["url_file"]);
+        $list_of_files = explode('; ', $data["file_name"]);
+        $list_of_doc = explode('; ', $data["document_link"]);
 
         $url_data = [];
         $file_data = [];
@@ -40,6 +40,8 @@ class PoRequestController extends Controller
             $doc_data[] = $doc;
         }
         
+        $formattedNumber = number_format($data["total_price"], 2, '.', ',');
+        
         $dataArray = array(
             'sender'        => $data["sender"],
             'entity_name'   => $data["entity_name"],
@@ -48,7 +50,7 @@ class PoRequestController extends Controller
             'user_name'     => $data["user_name"],
             'req_hd_descs'  => $data["req_hd_descs"],
             'req_hd_no'     => $data["req_hd_no"],
-            'total_price'   => $data["total_price"],
+            'total_price'   => $formattedNumber,
             'url_file'      => $url_data,
             'file_name'     => $file_data,
             'doc_link'      => $doc_data,
